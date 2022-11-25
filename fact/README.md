@@ -1,0 +1,122 @@
+# Fact Service
+
+## What you will learn
+
+In this lab you will learn methods for developing with containers in GCP including:
+[*] Creating a new Java starter application
+[*] Creating a simple CRUD Rest Service
+[ ] Enable Jib etc.
+[ ] Configuring the app for container development
+
+[ ] Deploying to Cloud Run
+[ ] Utilizing breakpoint / logs
+[ ] Hot deploying changes back to Cloud Run
+
+## Prerequisites
+
+### Setup a project
+
+Set an environment variable to the new project name:
+```shell
+export PROJECT_ID=<project_id>
+```
+
+Login to gcloud CLI if you are not already:
+```shell
+gcloud auth login
+```
+
+Create a new project:
+```shell
+gcloud projects create $PROJECT_ID
+```
+
+and set switch to the new project
+```shell
+gcloud config set project $PROJECT_ID
+```
+
+Save the project number to an environment variable:
+```shell
+export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format='value(projectNumber)')
+```
+
+Find the `ACCOUNT_ID` for a billing account to use for the project:
+```shell
+gcloud beta billing accounts list
+```
+
+and add it to an environment variable:
+```shell
+export BILLING_ACCOUNT_ID=<billing_account_id>
+```
+
+Enable billing for the project:
+```shell
+gcloud beta billing projects link $PROJECT_ID --billing-account $BILLING_ACCOUNT_ID
+```
+
+## Skaffold
+
+Install Skaffold:
+```shell
+brew install skaffold
+```
+
+Generate manifests for Skaffold
+```shell
+skaffold init --generate-manifests --XXenableJibInit
+```
+When prompted:
+* Use the arrows to move your cursor to **<code>Jib Maven Plugin</code></strong>
+* Press the spacebar to select the option.
+* Press enter to continue 
+* Enter *8080* for the port
+*Enter *y* to save the configuration
+
+This will generate two files: `skaffold.yaml` and `deployment.yaml`.
+
+## Update app name
+
+The default values included in the configuration don’t currently match the name of your application. Update the files to reference your application name rather than the default values.
+
+1. Change entries in Skaffold config
+    * Open `skaffold.yaml`
+    * Select the image name currently set as `pom-xml-image`
+    * Right click and choose Change All Occurrences
+    * Type in the new name as `fact-service`
+2. Change entries in Kubernetes config
+    * Open `deployment.yaml` file
+    * Select the image name currently set as` pom-xml-image`
+    * Right click and choose Change All Occurrences
+    * Type in the new name as `fact-service`
+
+
+gcloud services enable containerregistry.googleapis.com
+
+https://skaffold.dev/docs/pipeline-stages/builders/jib/
+
+go install github.com/GoogleCloudPlatform/docker-credential-gcr@latest
+
+gcloud auth configure-docker
+
+export IMAGE=fact-service
+
+mvn compile com.google.cloud.tools:jib-maven-plugin:2.8.0:build \
+-Dimage=gcr.io/$PROJECT_ID/$IMAGE
+
+settings.xml:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
+<servers>
+<server>
+<id>registry-1.docker.io</id>
+<username>YOUR_DOCKER_HUB_USERNAME</username>
+<password>YOUR_DOCKER_HUB_PASSWORD</password>
+</server>
+</servers>
+</settings>
+```
