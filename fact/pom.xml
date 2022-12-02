@@ -15,7 +15,6 @@
     <description>Skills Mapper fact service</description>
     <properties>
         <java.version>11</java.version>
-        <jib.maven-plugin-version>3.3.1</jib.maven-plugin-version>
         <maven.build.timestamp.format>yyyyMMdd-HHmmssSSS</maven.build.timestamp.format>
     </properties>
     <dependencies>
@@ -58,17 +57,7 @@
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
-                <version>${jib.maven-plugin-version}</version>
-                <configuration>
-                    <from>
-                        <image>openjdk:8</image>
-                    </from>
-                    <container>
-                        <jvmFlags>
-                            <jvmFlag>-Djava.security.egd=file:/dev/./urandom</jvmFlag>
-                        </jvmFlags>
-                    </container>
-                </configuration>
+                <version>3.3.1</version>
             </plugin>
         </plugins>
     </build>

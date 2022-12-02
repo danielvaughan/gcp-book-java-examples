@@ -5,63 +5,48 @@
 In this lab you will learn methods for developing with containers in GCP including:
 [*] Creating a new Java starter application
 [*] Creating a simple CRUD Rest Service
-[ ] Enable Jib etc.
-[ ] Configuring the app for container development
+[*] Enable Jib etc.
+[*] Configuring the app for container development
 
-[ ] Deploying to Cloud Run
+[*] Deploying to Minikube
 [ ] Utilizing breakpoint / logs
-[ ] Hot deploying changes back to Cloud Run
+[ ] Hot deploying changes back to Minikube
 
-## Prerequisites
+## Pre-requisites
 
-### Setup a project
+### Minikube with Podman on M1 Mac
 
-Set an environment variable to the new project name:
+Install Podman and Minikube.
+
 ```shell
-export PROJECT_ID=<project_id>
+brew install podman
+brew install minikube
 ```
 
-Login to gcloud CLI if you are not already:
+Create a Podman virtual machines
 ```shell
-gcloud auth login
+podman machine init --cpus 2 --memory 2048 --rootful
+podman machine start
 ```
 
-Create a new project:
+Start a new Minikube cluster using the Podman virtual machine.
 ```shell
-gcloud projects create $PROJECT_ID
+minikube start --driver=podman
 ```
 
-and set switch to the new project
-```shell
-gcloud config set project $PROJECT_ID
-```
+  
 
-Save the project number to an environment variable:
-```shell
-export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format='value(projectNumber)')
-```
 
-Find the `ACCOUNT_ID` for a billing account to use for the project:
-```shell
-gcloud beta billing accounts list
-```
 
-and add it to an environment variable:
-```shell
-export BILLING_ACCOUNT_ID=<billing_account_id>
-```
 
-Enable billing for the project:
-```shell
-gcloud beta billing projects link $PROJECT_ID --billing-account $BILLING_ACCOUNT_ID
-```
 
-## Skaffold
 
-Install Skaffold:
-```shell
-brew install skaffold
-```
+
+
+
+
+
+
 
 Generate manifests for Skaffold
 ```shell
@@ -119,4 +104,74 @@ xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.
 </server>
 </servers>
 </settings>
+```
+
+
+
+
+## Prerequisites
+
+### Setup a project
+
+Set an environment variable to the new project name:
+```shell
+export PROJECT_ID=<project_id>
+```
+
+Login to gcloud CLI if you are not already:
+```shell
+gcloud auth login
+```
+
+Create a new project:
+```shell
+gcloud projects create $PROJECT_ID
+```
+
+and set switch to the new project
+```shell
+gcloud config set project $PROJECT_ID
+```
+
+Save the project number to an environment variable:
+```shell
+export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format='value(projectNumber)')
+```
+
+Find the `ACCOUNT_ID` for a billing account to use for the project:
+```shell
+gcloud beta billing accounts list
+```
+
+and add it to an environment variable:
+```shell
+export BILLING_ACCOUNT_ID=<ACCOUNT_ID>
+```
+
+Enable billing for the project:
+```shell
+gcloud beta billing projects link $PROJECT_ID --billing-account $BILLING_ACCOUNT_ID
+```
+
+Enable artifact repository
+```shell
+gcloud services enable artifactregistry.googleapis.com
+```
+Pick a location to use
+```shell
+gcloud config set artifacts/location europe-central2
+```
+Define an artifact repo name
+```shell
+export ARTIFACT_REPO_NAME=fact-repo
+```
+Create a new docker repo
+```shell
+gcloud artifacts repositories create $ARTIFACT_REPO_NAME --repository-format=docker
+````
+
+---
+Set the default repo for skaffold to use
+```shell
+skaffold config set default-repo $ARTIFACT_REPO_NAME 
 ```

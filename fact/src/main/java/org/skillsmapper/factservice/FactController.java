@@ -19,27 +19,27 @@ public class FactController {
 
     // Aggregate root
     // tag::get-aggregate-root[]
-    @GetMapping("/facts")
+    @GetMapping("/")
     Iterable<Fact> all() {
         return repository.findAll();
     }
     // end::get-aggregate-root[]
 
-    @PostMapping("/facts")
+    @PostMapping("/")
     Fact newFact(@RequestBody Fact newFact) {
         return repository.save(newFact);
     }
 
     // Single item
 
-    @GetMapping("/facts/{id}")
+    @GetMapping("/{id}")
     Fact one(@PathVariable Long id) {
 
         return repository.findById(id)
                 .orElseThrow(() -> new FactNotFoundException(id));
     }
 
-    @PutMapping("/facts/{id}")
+    @PutMapping("/{id}")
     Fact replaceFact(@RequestBody Fact newFact, @PathVariable Long id) {
 
         return repository.findById(id)
