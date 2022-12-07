@@ -1,0 +1,23 @@
+apiVersion: skaffold/v3
+kind: Config
+metadata:
+  name: fact
+build:
+  artifacts:
+  - image: fact-service
+    jib:
+      project: org.skillsmapper:fact-service
+deploy:
+  kubectl: {}
+manifests:
+  rawYaml:
+  - deployment.yaml
+profiles:
+  - name: remote
+    build:
+      googleCloudBuild:
+        projectId: my-google-cloud-project
+      artifacts:
+        - image: fact-service
+          jib:
+            project: org.skillsmapper:fact-service

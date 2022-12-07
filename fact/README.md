@@ -175,3 +175,30 @@ Set the default repo for skaffold to use
 ```shell
 skaffold config set default-repo $ARTIFACT_REPO_NAME 
 ```
+
+### Cloud Workstations
+
+* CPU is critical on current workstations
+
+* Connect to Google Workstation
+* Connect via SSH to clone git project
+* Open Cloud Workstation using directory of cloned project
+
+## Skaffold 
+
+Upgrade Skaffold:
+
+```shell
+sudo curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64 && chmod +x skaffold &&
+mv skaffold /usr/local/bin/
+```
+
+## Cloud Run
+
+//Setup a project and repo
+
+export profile_name = remote
+export project_id = 
+export default_repo = 
+
+skaffold dev --profile [profile-name] --default-repo
